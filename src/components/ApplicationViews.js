@@ -1,9 +1,11 @@
-// Instructions for this Practice: Kennel Owners List
-// If you haven't created the owners array in your state yet, please go ahead and create it now, and populate it with 4 owners. Each owners should have the id, phoneNumber, and name properties.
+// Instructions for this Practice:
 
-// Create a link in your navigation bar that links to /owners path.
-// Create a route for /owners that renders the <OwnerList> component and sends the corresponding state property.
-// Add the code in <OwnerList> to display all the items in the array.
+// 1.  Refactor your code to populate the locations and the owners from your API.
+// 2.  Once you have everything rendering, remove the empty arrays you defined in the state object so you can see how the React lifecycle works. What happened when you removed them?
+// Change your state definition to this. Observe what happens.
+// state = {
+
+// }
 
 import { Route } from 'react-router-dom'
 import React, { Component } from "react"
@@ -14,46 +16,36 @@ import OwnerList from './owner/OwnerList'
 
 
 export default class ApplicationViews extends Component {
-    employeesFromAPI = [
-        { id: 1, name: "Jessica Younker" },
-        { id: 2, name: "Jordan Nelson" },
-        { id: 3, name: "Zoe LeBlanc" },
-        { id: 4, name: "Blaise Roberts" }
-    ]
 
-    locationsFromAPI = [
-        { id: 1, name: "Nashville North", address: "500 Circle Way" },
-        { id: 2, name: "Nashville South", address: "10101 Binary Court" }
-    ]
+  state = {
+    locations: [],
+    animals: [],
+    employees: [],
+    owners: []
+  }
+      componentDidMount() {
+        const newState = {} //An empty object to hold the data for each array in the state object
 
-    animalsFromAPI = [
-        { id: 1, name: "Doodles" },
-        { id: 2, name: "Jack" },
-        { id: 3, name: "Angus" },
-        { id: 4, name: "Henley" },
-        { id: 5, name: "Derkins" },
-        { id: 6, name: "Checkers" }
-    ]
-
-    ownersFromAPI = [
-      { id: 1, name: "King Kong", phone_number: "615-111-1111" },
-      { id: 2, name: "Captain Marvel", phone_number: "615-111-1112"},
-      { id: 3, name: "Super Man", phone_number: "615-111-1113" },
-      { id: 4, name: "Galaxy Lord", phone_number: "615-111-1114" }
-  ]
-
-    state = {
-        employees: this.employeesFromAPI,
-        locations: this.locationsFromAPI,
-        animals: this.animalsFromAPI,
-        owners: this.ownersFromAPI
+        fetch("http://localhost:5002/animals")
+            .then(r => r.json())
+            .then(animals => newState.animals = animals)
+            .then(() => fetch("http://localhost:5002/employees")
+            .then(r => r.json()))
+            .then(employees => newState.employees = employees)
+            .then(() => fetch("http://localhost:5002/owners")
+            .then(r => r.json()))
+            .then(owners => newState.owners = owners)
+            .then(() => fetch("http://localhost:5002/locations")
+            .then(r => r.json()))
+            .then(locations => newState.locations = locations)
+            .then(() => this.setState(newState))  //After each resource is brought back this sets the state and causes the re-rendering!
     }
 
     render() {
         return (
             <React.Fragment>
-                <Route exact path="/" render={(props) => {
-                    return <LocationList locations={this.state.locations} />
+                <Route exact path="/" render={(props) => { //The path is / and represents the default location--requires the <exact path> descriptor!
+                    return <LocationList locations={this.state.locations} />// State is being passed to locations
                 }} />
                 <Route path="/animals" render={(props) => {
                     return <AnimalList animals={this.state.animals} />
