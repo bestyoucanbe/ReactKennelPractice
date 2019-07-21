@@ -1,11 +1,6 @@
 // Instructions for this Practice:
 
-// 1.  Refactor your code to populate the locations and the owners from your API.
-// 2.  Once you have everything rendering, remove the empty arrays you defined in the state object so you can see how the React lifecycle works. What happened when you removed them?
-// Change your state definition to this. Observe what happens.
-// state = {
-
-// }
+//Set up the delete functionality using a delete function defined in the ApplicationViews, refactor the Route to pass the function to the AnimalList child element and then refactor the AnimalList component to show an animal card containing a delete button.
 
 import { Route } from 'react-router-dom'
 import React, { Component } from "react"
@@ -40,6 +35,18 @@ export default class ApplicationViews extends Component {
             .then(locations => newState.locations = locations)
             .then(() => this.setState(newState))  //After each resource is brought back this sets the state and causes the re-rendering!
     }
+// The deleteAnimal function is defined here (and then passed to the AnimalList component)
+    deleteAnimal = id => {
+        return fetch(`http://localhost:5002/animals/${id}`, {
+            method: "DELETE"
+        })
+        .then(() => fetch(`http://localhost:5002/animals`))
+        .then(animals => animals.json())
+        .then(animals => this.setState({
+            animals: animals
+        })
+      )
+    }
 
     render() {
         return (
@@ -47,8 +54,10 @@ export default class ApplicationViews extends Component {
                 <Route exact path="/" render={(props) => { //The path is / and represents the default location--requires the <exact path> descriptor!
                     return <LocationList locations={this.state.locations} />// State is being passed to locations
                 }} />
-                <Route path="/animals" render={(props) => {
-                    return <AnimalList animals={this.state.animals} />
+               <Route exact path="/animals" render={() => {
+                // The deleteAnimal function is being passed to the AnimalList component.
+                    return <AnimalList deleteAnimal={this.deleteAnimal}
+                                        animals={this.state.animals} />
                 }} />
                 <Route path="/employees" render={(props) => {
                     return <EmployeeList employees={this.state.employees} />
@@ -60,3 +69,4 @@ export default class ApplicationViews extends Component {
         )
     }
 }
+
