@@ -2,6 +2,9 @@
 
 //Set up the delete functionality using a delete function defined in the ApplicationViews, refactor the Route to pass the function to the AnimalList child element and then refactor the AnimalList component to show an animal card containing a delete button.
 
+//Practice: Kennels: Fire Employees
+//Add the same functionality to the EmployeeList component so that employees can be fired!
+
 import { Route } from 'react-router-dom'
 import React, { Component } from "react"
 import AnimalList from './animal/AnimalList'
@@ -48,6 +51,20 @@ export default class ApplicationViews extends Component {
       )
     }
 
+// The deleteEmployee function is defined here (and then passed to the EmployeeList component)
+    deleteEmployee = id => {
+        return fetch(`http://localhost:5002/employees/${id}`, {
+            method: "DELETE"
+        })
+        .then(() => fetch(`http://localhost:5002/employees`))
+        .then(employees => employees.json())
+        .then(employees => this.setState({
+            employees: employees
+        })
+        )
+    }
+
+
     render() {
         return (
             <React.Fragment>
@@ -60,7 +77,9 @@ export default class ApplicationViews extends Component {
                                         animals={this.state.animals} />
                 }} />
                 <Route path="/employees" render={(props) => {
-                    return <EmployeeList employees={this.state.employees} />
+                // The deleteEmployee function is being passed to the EmployeeList component.
+                    return <EmployeeList deleteEmployee={this.deleteEmployee}
+                                        employees={this.state.employees} />
                 }} />
                 <Route path="/owners" render={(props) => {
                     return <OwnerList owners={this.state.owners} />
