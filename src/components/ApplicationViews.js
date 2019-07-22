@@ -1,9 +1,12 @@
 // Instructions for this Practice:
 
-//Set up the delete functionality using a delete function defined in the ApplicationViews, refactor the Route to pass the function to the AnimalList child element and then refactor the AnimalList component to show an animal card containing a delete button.
+//Set up the delete functionality using a delete function defined in the ApplicationViews, refactor the Route to pass the function to the AnimalList child element and then refactor the AnimalList component to show an animal card containing a delete button. [Completed]
 
 //Practice: Kennels: Fire Employees
-//Add the same functionality to the EmployeeList component so that employees can be fired!
+//Add the same functionality to the EmployeeList component so that employees can be fired!  [Completed]
+
+// Practice: Kennels: Remove Owners
+// Add the same functionality to the OwnerList for when they decide they no longer want to be a customer. [Completed]
 
 import { Route } from 'react-router-dom'
 import React, { Component } from "react"
@@ -64,6 +67,18 @@ export default class ApplicationViews extends Component {
         )
     }
 
+// The deleteOwner function is defined here (and then passed to the OwnerList component)
+    deleteOwner = id => {
+        return fetch(`http://localhost:5002/owners/${id}`, {
+            method: "DELETE"
+        })
+        .then(() => fetch(`http://localhost:5002/owners`))
+        .then(owners => owners.json())
+        .then(owners => this.setState({
+            owners: owners
+        })
+        )
+    }
 
     render() {
         return (
@@ -82,7 +97,9 @@ export default class ApplicationViews extends Component {
                                         employees={this.state.employees} />
                 }} />
                 <Route path="/owners" render={(props) => {
-                    return <OwnerList owners={this.state.owners} />
+                // The deleteOwners function is being passed to the OwnerList component.
+                    return <OwnerList   deleteOwner={this.deleteOwner}
+                                        owners={this.state.owners} />
                 }} />
             </React.Fragment>
         )

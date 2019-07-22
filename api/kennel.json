@@ -21,6 +21,6 @@
   { "id": 1, "name": "King Kong", "phone_number": "615-111-1111" },
   { "id": 2, "name": "Captain Marvel", "phone_number": "615-111-1112"},
   { "id": 3, "name": "Super Man", "phone_number": "615-111-1113" },
-  { "id": 4, "name": "Galaxy Lord", "phone_number": "615-111-1114" }
+  { "id": 4, "name": "Star Lord", "phone_number": "615-111-1114" }
   ]
 }
