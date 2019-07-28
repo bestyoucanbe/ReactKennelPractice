@@ -21,7 +21,8 @@ export default class ApplicationViews extends Component {
     owners: []
   }
       componentDidMount() {
-        const newState = {} //An empty object to hold the data for each array in the state object
+        //Because this is not used in the refactored code, it is being commented out.
+        // const newState = {} //An empty object to hold the data for each array in the state object
 
         // Code below was refactored by calling each manager module (see below)
         // fetch("http://localhost:5002/animals")
